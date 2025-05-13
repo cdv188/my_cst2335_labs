@@ -28,23 +28,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _counter = 0.0;
-  var myFontSize = 30.0;
+  late TextEditingController _loginController;
+  late TextEditingController _passController;
+  var img = "images/question-mark.png";
 
-  void _incrementCounter() {
-    setState(() {
-      if(_counter < 99.0) {
-        myFontSize++;
-        _counter++;
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    _loginController = TextEditingController();
+    _passController = TextEditingController();//making _controller
   }
-  void setNewValue(double value)
-  {
-    setState(() {
-      _counter = value;
-      myFontSize = value;
-    });
+
+  @override
+  void dispose() {
+    _loginController.dispose();
+    _passController.dispose();
+    super.dispose(); // free memory that was typed
   }
 
   @override
@@ -58,27 +57,46 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('You have pushed the button this many times:',
-              style: TextStyle(fontSize: myFontSize),
+            TextField(controller: _loginController,
+              decoration: InputDecoration(
+                  hintText: "Type here",
+                  border: OutlineInputBorder(),
+                  labelText: "Login"
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+
+            TextField(controller: _passController,
+              decoration: InputDecoration(
+                hintText: "Type here",
+                border: OutlineInputBorder(),
+                labelText: "Password",
+              ),
+              obscureText: true,
             ),
-            Slider(
-                value: _counter,
-                onChanged: setNewValue,
-                max: 100.0,
-                min: 0.0
+
+            ElevatedButton( onPressed: () {
+              if(_passController.value.text == "QWERTY123"){
+                setState(() {
+                  img = "images/idea.png";
+                });
+              }else{
+                setState(() {
+                  img = "images/stop.png";
+                });
+              }
+            }, // Lambda Function
+              child: Text("Login",
+                  style: TextStyle(fontSize: 30, color: Colors.blue)),
             ),
+            Image.asset(img, width: 300, height: 300,)
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ),
+      ),*/
     );
   }
 }
