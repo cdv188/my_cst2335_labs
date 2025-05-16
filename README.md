@@ -2,7 +2,7 @@
 
 cst2335 project lvl3
 
-## Getting Started
+## Lab 2
 
 This project is a starting point for a Flutter application.
 
