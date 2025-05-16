@@ -10,11 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CST2335',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'CST2335 Lab 2'),
     );
   }
 }
@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   img = "images/stop.png";
                 });
               }
-            }, // Lambda Function
+            },
               child: Text("Login",
                   style: TextStyle(fontSize: 30, color: Colors.blue)),
             ),
