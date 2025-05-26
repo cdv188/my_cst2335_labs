@@ -83,16 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ElevatedButton(onPressed: () { }, child: Text("Button 3")),
         ],
       ),
+
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
           children: <Widget>[
-            ElevatedButton(onPressed: () { }, child: Text("Button 1")),
-            ElevatedButton(onPressed: () { }, child: Text("Button 2")),
-            ElevatedButton(onPressed: () { }, child: Text("Button 3")),
-            ElevatedButton(onPressed: () { }, child: Text("Button 4")),
-
-
+            Image.asset("images/stop.png"),
+              Text("This is as stop sign",
+                style: TextStyle(
+                    fontSize: 30.0, backgroundColor:Colors.white),
+              )
 
 /*            TextField(controller: _loginController,
               decoration: InputDecoration(
