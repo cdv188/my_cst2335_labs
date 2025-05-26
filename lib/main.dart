@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loginController = TextEditingController();
-    _passController = TextEditingController();//making _controller
+    _passController = TextEditingController(); //making _controller
   }
 
   @override
@@ -50,51 +50,69 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem( icon: Icon(Icons.camera), label: 'Camera'  ),
-            BottomNavigationBarItem( icon: Icon(Icons.add_call), label: 'Phone' ),
-          ],
-          onTap:(btnIndex){
-            if(btnIndex == 0){ // Camera
-
-            }else if(btnIndex == 1){ // Phone
-
-            }
-        }
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.camera), label: 'Camera'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_call), label: 'Phone'),
+        ],
+        onTap: (btnIndex) {
+          if (btnIndex == 0) {
+            // Camera
+          } else if (btnIndex == 1) {
+            // Phone
+          }
+        },
       ),
-      
-      drawer: Drawer(child:
-          Column(children: [
-            ElevatedButton(onPressed: () { }, child: Text("Button 1")),
-            ElevatedButton(onPressed: () { }, child: Text("Button 2")),
-            ElevatedButton(onPressed: () { }, child: Text("Button 3")),
 
-          ],)
+      drawer: Drawer(
+        child: Column(
+          children: [
+            ElevatedButton(onPressed: () {}, child: Text("Button 1")),
+            ElevatedButton(onPressed: () {}, child: Text("Button 2")),
+            ElevatedButton(onPressed: () {}, child: Text("Button 3")),
+          ],
+        ),
       ),
 
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("CST2335 Page"),
         actions: [
-          ElevatedButton(onPressed: () { }, child: Text("Button 1")),
-          ElevatedButton(onPressed: () { }, child: Text("Button 2")),
-          ElevatedButton(onPressed: () { }, child: Text("Button 3")),
+          ElevatedButton(onPressed: () {}, child: Text("Button 1")),
+          ElevatedButton(onPressed: () {}, child: Text("Button 2")),
+          ElevatedButton(onPressed: () {}, child: Text("Button 3")),
         ],
       ),
 
       body: Center(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: <Widget>[
-            Image.asset("images/stop.png"),
-              Text("This is as stop sign",
-                style: TextStyle(
-                    fontSize: 30.0, backgroundColor:Colors.white),
-              )
+        child: Padding(
+          padding: EdgeInsets.all(50),
 
-/*            TextField(controller: _loginController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "One-pan skillet cookie",
+                style: TextStyle(fontSize: 50, color: Colors.orange),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
+                child: Text("INGREDIENTS LIST", style: TextStyle(fontSize: 20)),
+              ),
+              Row(
+                children: [
+                  Icon(Icons.add_circle),
+                  Text("1 Stick of unsalted butter"),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.add_circle),
+                  Text("1 cup granulated sugar"),
+                ],
+              ),
+              /*            TextField(controller: _loginController,
               decoration: InputDecoration(
                   hintText: "Type here",
                   border: OutlineInputBorder(),
@@ -126,14 +144,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontSize: 30, color: Colors.blue)),
             ),
             Image.asset(img, width: 300, height: 300,)*/
-          ],
+            ],
+          ),
         ),
-      ),
-      /*floatingActionButton: FloatingActionButton(
+        /*floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),*/
+      ),
     );
   }
 }
