@@ -57,7 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(controller: _loginController,
+            ElevatedButton(onPressed: () { }, child: Text("Button 1")),
+            ElevatedButton(onPressed: () { }, child: Text("Button 2")),
+            ElevatedButton(onPressed: () { }, child: Text("Button 3")),
+            ElevatedButton(onPressed: () { }, child: Text("Button 4")),
+
+
+
+/*            TextField(controller: _loginController,
               decoration: InputDecoration(
                   hintText: "Type here",
                   border: OutlineInputBorder(),
@@ -88,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text("Login",
                   style: TextStyle(fontSize: 30, color: Colors.blue)),
             ),
-            Image.asset(img, width: 300, height: 300,)
+            Image.asset(img, width: 300, height: 300,)*/
           ],
         ),
       ),
