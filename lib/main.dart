@@ -50,108 +50,332 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.camera), label: 'Camera'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_call), label: 'Phone'),
-        ],
-        onTap: (btnIndex) {
-          if (btnIndex == 0) {
-            // Camera
-          } else if (btnIndex == 1) {
-            // Phone
-          }
-        },
-      ),
-
-      drawer: Drawer(
-        child: Column(
-          children: [
-            ElevatedButton(onPressed: () {}, child: Text("Button 1")),
-            ElevatedButton(onPressed: () {}, child: Text("Button 2")),
-            ElevatedButton(onPressed: () {}, child: Text("Button 3")),
-          ],
-        ),
-      ),
-
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("CST2335 Page"),
-        actions: [
-          ElevatedButton(onPressed: () {}, child: Text("Button 1")),
-          ElevatedButton(onPressed: () {}, child: Text("Button 2")),
-          ElevatedButton(onPressed: () {}, child: Text("Button 3")),
-        ],
+        title: Text("Week 3 Lab"),
       ),
 
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(50),
-
+          padding: EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                "One-pan skillet cookie",
-                style: TextStyle(fontSize: 50, color: Colors.orange),
-              ),
+              Text("Browse Categories", style: TextStyle(fontSize: 50)),
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
-                child: Text("INGREDIENTS LIST", style: TextStyle(fontSize: 20)),
+                child: Text(
+                  "Not sure about exactly which recipe you're looking for? do a search, or dive into out most popular categories",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Text(
+                "BY MEAT",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(Icons.add_circle),
-                  Text("1 Stick of unsalted butter"),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/beef.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "BEEF",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/chicken.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "CHICKEN",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/pork.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "PORK",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/seafood.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "SEAFOOD",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
+              ),
+              Text(
+                "BY COURSE",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(Icons.add_circle),
-                  Text("1 cup granulated sugar"),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/maindish.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Main Dish",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/salad.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Salad Recipes",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/sidedish.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Side Dishes",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/crockpot.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Crockpot",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              /*            TextField(controller: _loginController,
-              decoration: InputDecoration(
-                  hintText: "Type here",
-                  border: OutlineInputBorder(),
-                  labelText: "Login"
+              Text(
+                "BY DESSERT ",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-            ),
-
-            TextField(controller: _passController,
-              decoration: InputDecoration(
-                hintText: "Type here",
-                border: OutlineInputBorder(),
-                labelText: "Password",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/icecream.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Ice Cream",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/browny.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Brownies",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/pie.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Pies",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/cooky.jpg'),
+                        radius: 100,
+                      ),
+                      Text(
+                        "Cookies",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              obscureText: true,
-            ),
-
-            ElevatedButton( onPressed: () {
-              if(_passController.value.text == "QWERTY123"){
-                setState(() {
-                  img = "images/idea.png";
-                });
-              }else{
-                setState(() {
-                  img = "images/stop.png";
-                });
-              }
-            },
-              child: Text("Login",
-                  style: TextStyle(fontSize: 30, color: Colors.blue)),
-            ),
-            Image.asset(img, width: 300, height: 300,)*/
             ],
           ),
         ),
-        /*floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),*/
       ),
     );
   }
