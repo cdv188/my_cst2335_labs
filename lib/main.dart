@@ -1,3 +1,4 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,7 +37,28 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loginController = TextEditingController();
-    _passController = TextEditingController();//making _controller
+    _passController = TextEditingController(); //making _controller
+    Future.delayed(Duration.zero, () async {
+      EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+      var usr = prefs.getString("Username");
+      var pass = prefs.getString("Password");
+
+      if (await usr != '' || await usr != '') {
+        var snackBar = SnackBar(
+          content: Text("Username: ${await usr} Password: ${await pass}"),
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(label: 'Close', onPressed: () {}),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else {
+        var snackBar = SnackBar(
+          content: Text("Nothing was Found"),
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(label: 'Close', onPressed: () {}),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 
   @override
@@ -46,26 +68,40 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose(); // free memory that was typed
   }
 
+  void getSharedPref() async {
+    EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+
+    var username = await prefs.getString("Username");
+    var password = await prefs.getString("Password");
+
+    if (username != '' || password != '') {
+      _loginController.text = username;
+      _passController.text = password;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text("Week 4 lab"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(controller: _loginController,
+            TextField(
+              controller: _loginController,
               decoration: InputDecoration(
-                  hintText: "Type here",
-                  border: OutlineInputBorder(),
-                  labelText: "Login"
+                hintText: "Type here",
+                border: OutlineInputBorder(),
+                labelText: "Login",
               ),
             ),
 
-            TextField(controller: _passController,
+            TextField(
+              controller: _passController,
               decoration: InputDecoration(
                 hintText: "Type here",
                 border: OutlineInputBorder(),
@@ -74,21 +110,64 @@ class _MyHomePageState extends State<MyHomePage> {
               obscureText: true,
             ),
 
-            ElevatedButton( onPressed: () {
-              if(_passController.value.text == "QWERTY123"){
-                setState(() {
-                  img = "images/idea.png";
-                });
-              }else{
-                setState(() {
-                  img = "images/stop.png";
-                });
-              }
-            },
-              child: Text("Login",
-                  style: TextStyle(fontSize: 30, color: Colors.blue)),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return AlertDialog(
+                      title: Text("Question?"),
+                      content: Text("Do you want to save this?"),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            //loads the encrypted data table
+                            if (_passController.value.text == "QWERTY123") {
+                              EncryptedSharedPreferences prefs =
+                                  EncryptedSharedPreferences();
+                              prefs.setString(
+                                "Password",
+                                _passController.value.text,
+                              );
+                              prefs.setString(
+                                "Username",
+                                _loginController.value.text,
+                              );
+                              setState(() {
+                                img = "images/idea.png";
+                              });
+                            } else {
+                              setState(() {
+                                img = "images/stop.png";
+                              });
+                            }
+                            Navigator.pop(ctx);
+                          },
+                          child: Text('Yes'),
+                        ),
+
+                        FilledButton(
+                          onPressed: () {
+                            EncryptedSharedPreferences prefs =
+                                EncryptedSharedPreferences();
+
+                            prefs.clear(); //remove the data
+
+                            Navigator.pop(ctx);
+                          },
+                          child: Text('No'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text(
+                "Login",
+                style: TextStyle(fontSize: 30, color: Colors.blue),
+              ),
             ),
-            Image.asset(img, width: 300, height: 300,)
+            Image.asset(img, width: 300, height: 300),
           ],
         ),
       ),
