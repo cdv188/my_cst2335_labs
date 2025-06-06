@@ -38,27 +38,37 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loginController = TextEditingController();
     _passController = TextEditingController(); //making _controller
-    Future.delayed(Duration.zero, () async {
-      EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
-      var usr = prefs.getString("Username");
-      var pass = prefs.getString("Password");
 
-      if (await usr != '' || await usr != '') {
-        var snackBar = SnackBar(
-          content: Text("Username: ${await usr} Password: ${await pass}"),
+    getSharedPref();
+  }
+
+  void getSharedPref() async {
+    EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+
+    String username = await prefs.getString("Username");
+    String password = await prefs.getString("Password");
+
+    if (username.isNotEmpty || password.isNotEmpty) {
+      _loginController.text = username;
+      _passController.text = password;
+
+      // Optional: Show snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username: $username, Password: $password"),
           duration: Duration(seconds: 5),
           action: SnackBarAction(label: 'Close', onPressed: () {}),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else {
-        var snackBar = SnackBar(
-          content: Text("Nothing was Found"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Nothing was saved"),
           duration: Duration(seconds: 5),
           action: SnackBarAction(label: 'Close', onPressed: () {}),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
+        ),
+      );
+    }
   }
 
   @override
@@ -66,18 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _loginController.dispose();
     _passController.dispose();
     super.dispose(); // free memory that was typed
-  }
-
-  void getSharedPref() async {
-    EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
-
-    var username = await prefs.getString("Username");
-    var password = await prefs.getString("Password");
-
-    if (username != '' || password != '') {
-      _loginController.text = username;
-      _passController.text = password;
-    }
   }
 
   @override
@@ -155,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                             Navigator.pop(ctx);
                           },
-                          child: Text('No'),
+                          child: Text('Clear'),
                         ),
                       ],
                     );
