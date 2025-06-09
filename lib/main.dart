@@ -1,6 +1,8 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
+import 'DataRepository.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'CST2335 Lab 2'),
+      home: const MyHomePage(title: 'CST2335 Lab 5'),
     );
   }
 }
@@ -110,55 +112,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext ctx) {
-                    return AlertDialog(
-                      title: Text("Question?"),
-                      content: Text("Do you want to save this?"),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            //loads the encrypted data table
-                            if (_passController.value.text == "QWERTY123") {
-                              EncryptedSharedPreferences prefs =
-                                  EncryptedSharedPreferences();
-                              prefs.setString(
-                                "Password",
-                                _passController.value.text,
-                              );
-                              prefs.setString(
-                                "Username",
-                                _loginController.value.text,
-                              );
-                              setState(() {
-                                img = "images/idea.png";
-                              });
-                            } else {
-                              setState(() {
-                                img = "images/stop.png";
-                              });
-                            }
-                            Navigator.pop(ctx);
-                          },
-                          child: Text('Yes'),
-                        ),
-
-                        FilledButton(
-                          onPressed: () {
-                            EncryptedSharedPreferences prefs =
-                                EncryptedSharedPreferences();
-
-                            prefs.clear(); //remove the data
-
-                            Navigator.pop(ctx);
-                          },
-                          child: Text('Clear'),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                //loads the encrypted data table
+                if (_passController.value.text == "QWERTY123") {
+                  EncryptedSharedPreferences prefs =
+                      EncryptedSharedPreferences();
+                  prefs.setString("Password", _passController.value.text);
+                  prefs.setString("Username", _loginController.value.text);
+                  setState(() {
+                    img = "images/idea.png";
+                  });
+                  DataRepository.loginName = _loginController.value.text;
+                  Navigator.pushNamed(context, '/ProfilePage');
+                } else {
+                  setState(() {
+                    img = "images/stop.png";
+                  });
+                }
               },
               child: Text(
                 "Login",
