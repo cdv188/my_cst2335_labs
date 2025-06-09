@@ -1,7 +1,8 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:my_cst2335_lab/profile_page.dart';
 
-import 'DataRepository.dart';
+import 'data_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'CST2335 Lab 5'),
+      initialRoute: '/', //default load the '/' route
+      routes: {
+        '/': (context) => MyHomePage(title: 'Title'),
+        '/ProfilePage': (context) => ProfilePage(),
+      },
     );
   }
 }
@@ -53,23 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
     if (username.isNotEmpty || password.isNotEmpty) {
       _loginController.text = username;
       _passController.text = password;
-
-      // Optional: Show snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Username: $username, Password: $password"),
-          duration: Duration(seconds: 5),
-          action: SnackBarAction(label: 'Close', onPressed: () {}),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Nothing was saved"),
-          duration: Duration(seconds: 5),
-          action: SnackBarAction(label: 'Close', onPressed: () {}),
-        ),
-      );
     }
   }
 
@@ -109,31 +97,48 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               obscureText: true,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    //loads the encrypted data table
+                    if (_passController.value.text == "QWERTY123") {
+                      DataRepository.loginName = _loginController.value.text;
+                      Navigator.pushNamed(context, '/ProfilePage');
+                      EncryptedSharedPreferences prefs =
+                          EncryptedSharedPreferences();
+                      prefs.setString("Password", _passController.value.text);
+                      prefs.setString("Username", _loginController.value.text);
+                      setState(() {
+                        img = "images/idea.png";
+                      });
+                    } else {
+                      setState(() {
+                        img = "images/stop.png";
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Login",
+                    style: TextStyle(fontSize: 30, color: Colors.blue),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    EncryptedSharedPreferences prefs =
+                        EncryptedSharedPreferences();
 
-            ElevatedButton(
-              onPressed: () {
-                //loads the encrypted data table
-                if (_passController.value.text == "QWERTY123") {
-                  EncryptedSharedPreferences prefs =
-                      EncryptedSharedPreferences();
-                  prefs.setString("Password", _passController.value.text);
-                  prefs.setString("Username", _loginController.value.text);
-                  setState(() {
-                    img = "images/idea.png";
-                  });
-                  DataRepository.loginName = _loginController.value.text;
-                  Navigator.pushNamed(context, '/ProfilePage');
-                } else {
-                  setState(() {
-                    img = "images/stop.png";
-                  });
-                }
-              },
-              child: Text(
-                "Login",
-                style: TextStyle(fontSize: 30, color: Colors.blue),
-              ),
+                    prefs.clear(); //remove the data
+                  },
+                  child: Text(
+                    "Clear",
+                    style: TextStyle(fontSize: 30, color: Colors.red),
+                  ),
+                ),
+              ],
             ),
+
             Image.asset(img, width: 300, height: 300),
           ],
         ),
