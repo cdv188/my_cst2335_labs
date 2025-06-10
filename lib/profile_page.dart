@@ -47,6 +47,11 @@ class ProfilePageState extends State<ProfilePage> {
 
   Future<void> _saveData() async {
     await repository.saveData(_prefs);
+
+    repository.firstName = _firstNameController.text;
+    repository.lastName = _lastNameController.text;
+    repository.email = _emailController.text;
+    repository.phoneNumber = _phoneController.text;
   }
 
   @override
@@ -81,9 +86,7 @@ class ProfilePageState extends State<ProfilePage> {
                 border: OutlineInputBorder(),
                 labelText: "First Name",
               ),
-              onChanged: (value) {
-                _saveData();
-              },
+              onChanged: (value) => _saveData(),
             ),
             SizedBox(height: 15),
 
@@ -95,9 +98,7 @@ class ProfilePageState extends State<ProfilePage> {
                 border: OutlineInputBorder(),
                 labelText: "Last Name",
               ),
-              onChanged: (value) {
-                _saveData();
-              },
+              onChanged: (value) => _saveData(),
             ),
             SizedBox(height: 15),
 
@@ -113,22 +114,16 @@ class ProfilePageState extends State<ProfilePage> {
                       border: OutlineInputBorder(),
                       labelText: "Phone Number",
                     ),
-                    onChanged: (value) {
-                      _saveData();
-                    },
+                    onChanged: (value) => _saveData(),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.phone),
-                  onPressed: () {
-                    _launchUrl('tel:${_phoneController.text}');
-                  },
+                  onPressed: () => _launchUrl('tel:${_phoneController.text}'),
                 ),
                 IconButton(
                   icon: Icon(Icons.message),
-                  onPressed: () {
-                    _launchUrl('sms:${_phoneController.text}');
-                  },
+                  onPressed: () => _launchUrl('sms:${_phoneController.text}'),
                 ),
               ],
             ),
@@ -151,9 +146,8 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.mail),
-                  onPressed: () {
-                    _launchUrl('mailto:${_emailController.text}');
-                  },
+                  onPressed:
+                      () => _launchUrl('mailto:${_emailController.text}'),
                 ),
               ],
             ),
@@ -162,9 +156,7 @@ class ProfilePageState extends State<ProfilePage> {
             Center(
               child: ElevatedButton(
                 child: Text("Go Back"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               ),
             ),
           ],
