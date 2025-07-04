@@ -1,8 +1,4 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:my_cst2335_lab/profile_page.dart';
-
-import 'data_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,11 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/', //default load the '/' route
-      routes: {
-        '/': (context) => MyHomePage(title: 'Title'),
-        '/ProfilePage': (context) => ProfilePage(),
-      },
+      home: const MyHomePage(title: 'CST2335 Lab 3'),
     );
   }
 }
@@ -37,36 +29,134 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController _loginController;
-  late TextEditingController _passController;
-  var img = "images/question-mark.png";
-
+  late TextEditingController _quantityController;
+  late TextEditingController _itemController;
   @override
   void initState() {
     super.initState();
-    _loginController = TextEditingController();
-    _passController = TextEditingController(); //making _controller
-
-    getSharedPref();
-  }
-
-  void getSharedPref() async {
-    EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
-
-    String username = await prefs.getString("Username");
-    String password = await prefs.getString("Password");
-
-    if (username.isNotEmpty || password.isNotEmpty) {
-      _loginController.text = username;
-      _passController.text = password;
-    }
+    _itemController = TextEditingController();
+    _quantityController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _loginController.dispose();
-    _passController.dispose();
+    _itemController.dispose();
+    _quantityController.dispose();
     super.dispose(); // free memory that was typed
+  }
+
+  List<String> items = [];
+  List<String> quantities = [];
+
+  Widget listPage() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            "Shopping List",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(3),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _itemController,
+                  decoration: InputDecoration(
+                    hintText: "Type Item here",
+                    border: OutlineInputBorder(),
+                    labelText: "Item",
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _quantityController,
+                  decoration: InputDecoration(
+                    hintText: "Type Quantity here",
+                    border: OutlineInputBorder(),
+                    labelText: "Quantity",
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                child: Text("Add item"),
+                onPressed: () {
+                  if (_itemController.text.isNotEmpty &&
+                      _quantityController.text.isNotEmpty) {
+                    setState(() {
+                      items.add(_itemController.value.text);
+                      quantities.add(_quantityController.value.text);
+                      _quantityController.text = "";
+                      _itemController.text = "";
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+
+        Expanded(
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, rowNum) {
+              return GestureDetector(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${rowNum + 1}. ",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text("${items[rowNum]} ", style: TextStyle(fontSize: 20)),
+                    Text(
+                      "Quantity: ${quantities[rowNum]}",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+                onLongPress: () {
+                  showDialog<String>(
+                    context: context,
+                    builder:
+                        (BuildContext context) => AlertDialog(
+                          title: const Text('Delete'),
+                          content: const Text('Are you sure?'),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  items.removeAt(rowNum);
+                                  quantities.removeAt(rowNum);
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Text("Yes"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("No"),
+                            ),
+                          ],
+                        ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -74,81 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Week 5 lab"),
+        title: Text("Week 6 Lab"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: _loginController,
-              decoration: InputDecoration(
-                hintText: "Type here",
-                border: OutlineInputBorder(),
-                labelText: "Login",
-              ),
-            ),
 
-            TextField(
-              controller: _passController,
-              decoration: InputDecoration(
-                hintText: "Type here",
-                border: OutlineInputBorder(),
-                labelText: "Password",
-              ),
-              obscureText: true,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    //loads the encrypted data table
-                    if (_passController.value.text == "QWERTY123") {
-                      DataRepository.loginName = _loginController.value.text;
-                      Navigator.pushNamed(context, '/ProfilePage');
-                      EncryptedSharedPreferences prefs =
-                          EncryptedSharedPreferences();
-                      prefs.setString("Password", _passController.value.text);
-                      prefs.setString("Username", _loginController.value.text);
-                      setState(() {
-                        img = "images/idea.png";
-                      });
-                    } else {
-                      setState(() {
-                        img = "images/stop.png";
-                      });
-                    }
-                  },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 30, color: Colors.blue),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    EncryptedSharedPreferences prefs =
-                        EncryptedSharedPreferences();
-
-                    prefs.clear(); //remove the data
-                  },
-                  child: Text(
-                    "Clear",
-                    style: TextStyle(fontSize: 30, color: Colors.red),
-                  ),
-                ),
-              ],
-            ),
-
-            Image.asset(img, width: 300, height: 300),
-          ],
-        ),
-      ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),*/
+      body: listPage(),
     );
   }
 }
