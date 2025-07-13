@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_cst2335_lab/app_database.dart';
+import 'package:my_cst2335_lab/shopping_item.dart';
+import 'package:my_cst2335_lab/shopping_item_dao.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'CST2335 Lab 3'),
+      home: const MyHomePage(title: 'CST2335 Lab 8'),
     );
   }
 }
@@ -29,29 +32,74 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController _quantityController;
   late TextEditingController _itemController;
+  late TextEditingController _quantityController;
+
+  late AppDatabase database;
+  late ShoppingItemDao dao;
+  List<ShoppingItem> shoppingList = [];
+
   @override
   void initState() {
     super.initState();
     _itemController = TextEditingController();
     _quantityController = TextEditingController();
+    _initializeDatabase();
+  }
+
+  Future<void> _initializeDatabase() async {
+    database =
+        await $FloorAppDatabase.databaseBuilder('shopping_list.db').build();
+    dao = database.shoppingItemDao;
+    final items = await dao.findAllItems();
+    setState(() {
+      shoppingList = items;
+    });
   }
 
   @override
   void dispose() {
     _itemController.dispose();
     _quantityController.dispose();
-    super.dispose(); // free memory that was typed
+    super.dispose();
   }
 
-  List<String> items = [];
-  List<String> quantities = [];
+  void _addItem() async {
+    final itemText = _itemController.text.trim();
+    final quantityText = _quantityController.text.trim();
 
-  Widget listPage() {
+    if (itemText.isNotEmpty && quantityText.isNotEmpty) {
+      final item = ShoppingItem(ShoppingItem.ID++, itemText, quantityText);
+      await dao.insertItem(item).then((_) {
+        setState(() {
+          shoppingList.add(item);
+          _itemController.clear();
+          _quantityController.clear();
+        });
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Item and Quantity must not be blank"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void _deleteItem(int index) {
+    final item = shoppingList[index];
+    dao.deleteItem(item).then((_) {
+      setState(() {
+        shoppingList.removeAt(index);
+      });
+    });
+  }
+
+  Widget _buildListView() {
     return Column(
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             "Shopping List",
@@ -59,98 +107,90 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(3),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: TextField(
                   controller: _itemController,
-                  decoration: InputDecoration(
-                    hintText: "Type Item here",
-                    border: OutlineInputBorder(),
+                  decoration: const InputDecoration(
+                    hintText: "Enter item",
                     labelText: "Item",
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
               Expanded(
                 child: TextField(
                   controller: _quantityController,
-                  decoration: InputDecoration(
-                    hintText: "Type Quantity here",
-                    border: OutlineInputBorder(),
+                  decoration: const InputDecoration(
+                    hintText: "Enter quantity",
                     labelText: "Quantity",
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              ElevatedButton(
-                child: Text("Add item"),
-                onPressed: () {
-                  if (_itemController.text.isNotEmpty &&
-                      _quantityController.text.isNotEmpty) {
-                    setState(() {
-                      items.add(_itemController.value.text);
-                      quantities.add(_quantityController.value.text);
-                      _quantityController.text = "";
-                      _itemController.text = "";
-                    });
-                  }
-                },
-              ),
+              const SizedBox(width: 8),
+              ElevatedButton(onPressed: _addItem, child: const Text("Add")),
             ],
           ),
         ),
-
+        const SizedBox(height: 10),
         Expanded(
           child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, rowNum) {
+            itemCount: shoppingList.length,
+            itemBuilder: (context, index) {
+              final item = shoppingList[index];
               return GestureDetector(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${rowNum + 1}. ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text("${items[rowNum]} ", style: TextStyle(fontSize: 20)),
-                    Text(
-                      "Quantity: ${quantities[rowNum]}",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
                 onLongPress: () {
                   showDialog<String>(
                     context: context,
                     builder:
                         (BuildContext context) => AlertDialog(
                           title: const Text('Delete'),
-                          content: const Text('Are you sure?'),
+                          content: const Text(
+                            'Are you sure you want to delete this item?',
+                          ),
                           actions: [
                             ElevatedButton(
                               onPressed: () {
-                                setState(() {
-                                  items.removeAt(rowNum);
-                                  quantities.removeAt(rowNum);
-                                });
+                                _deleteItem(index);
                                 Navigator.pop(context);
                               },
-                              child: Text("Yes"),
+                              child: const Text("Yes"),
                             ),
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("No"),
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("No"),
                             ),
                           ],
                         ),
                   );
                 },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "${index + 1}. ",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "${item.name} - Quantity: ${item.quantity}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
           ),
@@ -163,11 +203,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(widget.title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Week 6 Lab"),
       ),
-
-      body: listPage(),
+      body: _buildListView(),
     );
   }
 }
