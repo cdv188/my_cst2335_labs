@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Item and Quantity must not be blank"),
+          content: Text("Item and Quantity must not be blank!"),
           duration: Duration(seconds: 2),
         ),
       );
