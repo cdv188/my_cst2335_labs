@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'CST2335 Lab 8'),
+      home: const MyHomePage(title: 'CST2335 Lab 9'),
     );
   }
 }
@@ -38,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late AppDatabase database;
   late ShoppingItemDao dao;
   List<ShoppingItem> shoppingList = [];
+
+  var selectedItem;
 
   @override
   void initState() {
@@ -87,16 +89,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _deleteItem(int index) {
-    final item = shoppingList[index];
-    dao.deleteItem(item).then((_) {
+  void _deleteItem() {
+    dao.deleteItem(selectedItem).then((_) {
       setState(() {
-        shoppingList.removeAt(index);
+        shoppingList.removeWhere((item) => item.id == selectedItem.id);
+        selectedItem = null;
       });
     });
   }
 
-  Widget _buildListView() {
+  Widget ListPage() {
     return Column(
       children: [
         const Padding(
@@ -143,30 +145,10 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (context, index) {
               final item = shoppingList[index];
               return GestureDetector(
-                onLongPress: () {
-                  showDialog<String>(
-                    context: context,
-                    builder:
-                        (BuildContext context) => AlertDialog(
-                          title: const Text('Delete'),
-                          content: const Text(
-                            'Are you sure you want to delete this item?',
-                          ),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _deleteItem(index);
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Yes"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("No"),
-                            ),
-                          ],
-                        ),
-                  );
+                onTap: () {
+                  setState(() {
+                    selectedItem = item;
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -199,6 +181,87 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget DetailsPage() {
+    if (selectedItem != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Item Details",
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Item Name: ${selectedItem.name}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Quantity: ${selectedItem.quantity}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Database ID: ${selectedItem.id}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _deleteItem();
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                // Close button as per requirement 4
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedItem = null;
+                    });
+                  },
+                  child: const Text("Close"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+    return const Center(child: Text("No item selected"));
+  }
+
+  Widget reactiveLayout() {
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
+
+    if ((width > height) && (width > 720)) {
+      return Row(
+        children: [
+          Expanded(flex: 1, child: ListPage()),
+          Expanded(flex: 1, child: DetailsPage()),
+        ],
+      );
+    } else {
+      if (selectedItem == null) {
+        return ListPage();
+      } else {
+        return DetailsPage();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: _buildListView(),
+      body: reactiveLayout(),
     );
   }
 }
